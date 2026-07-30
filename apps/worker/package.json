@@ -1,0 +1,38 @@
+{
+  "name": "@repo/worker",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "node --import tsx --watch src/index.ts",
+    "build": "pnpm --filter @repo/worker... build && tsup src/index.ts --format cjs,esm --dts --clean --minify --tsconfig tsconfig.build.json",
+    "start": "node dist/index.js",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "tsup": "^8.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@repo/api-client": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/lib": "workspace:*",
+    "@repo/redis": "workspace:*",
+    "@repo/queue": "workspace:*",
+    "dotenv": "^16.0.0",
+    "bullmq": "^5.0.0",
+    "ioredis": "^5.3.2",
+    "mongoose": "^8.2.0"
+  }
+}

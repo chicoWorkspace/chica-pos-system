@@ -1,0 +1,18 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "paths": {
+      "@repo/lib": ["./../../packages/lib/src/index.ts"],
+      "@repo/api-client": ["./../../packages/api-client/src/index.ts"],
+      "@repo/db": ["./../../packages/db/src/index.ts"],
+      "@repo/redis": ["./../../packages/redis/src/index.ts"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "../../packages/*/src/**/*.ts" // 關鍵：讓 IDE 認可外部 packages 的原始碼
+  ],
+  "exclude": ["node_modules", "dist"]
+}

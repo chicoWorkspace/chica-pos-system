@@ -1,0 +1,70 @@
+services:
+  # MongoDB 單節點 Replica Set (主機名 mongo01)
+# MongoDB 8.0 單節點 Replica Set
+  mongo01:
+    image: mongo:8.0  # 更改為 8.0 版本
+    container_name: mongo01
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    volumes:
+      - ./mongodb.key:/tmp/mongodb.key:ro
+      - mongo-data:/data/db
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        # 複製並設定 keyFile 權限
+        cp /tmp/mongodb.key /data/configdb/mongodb.key
+        chown 999:999 /data/configdb/mongodb.key
+        chmod 400 /data/configdb/mongodb.key
+        # 啟動 mongod
+        exec /usr/local/bin/docker-entrypoint.sh mongod \
+          --replSet mongo-replica-set \
+          --bind_ip_all \
+          --keyFile /data/configdb/mongodb.key
+    ports:
+      - "27017:27017"
+    healthcheck:
+      # 8.0 建議明確帶入 authSource 確保 ping 成功
+      test: ["CMD", "mongosh", "-u", "root", "-p", "123456", "--authenticationDatabase", "admin", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 初始化 Replica Set (同樣改為 8.0)
+  mongo-init:
+    image: mongo:8.0
+    depends_on:
+      mongo01:
+        condition: service_healthy
+    command: >
+      mongosh --host mongo01:27017 -u root -p 123456 --authenticationDatabase admin --eval "
+        let status;
+        try { 
+          status = rs.status(); 
+        } catch (e) { 
+          status = { ok: 0 }; 
+        }
+        if (status.ok == 0) {
+          rs.initiate({
+            _id: 'mongo-replica-set',
+            members: [{ _id: 0, host: 'mongo01:27017' }]
+          });
+          print('Replica Set 初始化完成');
+        } else {
+          print('Replica Set 已經就緒，無需重複初始化');
+        }
+      "
+
+  # Redis 服務
+  redis:
+    image: redis:alpine
+    container_name: chica-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass "test"
+
+volumes:
+  mongo-data:

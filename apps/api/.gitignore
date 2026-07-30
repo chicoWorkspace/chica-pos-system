@@ -1,0 +1,18 @@
+# 依賴與編譯產物
+node_modules/
+dist/
+.next/
+out/
+
+# Turborepo 特有
+.turbo/
+
+# 環境變數 (最重要！)
+.env
+.env.*
+!.env.example
+!.local.env
+
+# 系統檔案
+.DS_Store
+Thumbs.db

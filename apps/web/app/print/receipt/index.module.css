@@ -1,0 +1,21 @@
+
+.wrapper  {
+  height: auto;
+  overflow-y: auto;
+}
+
+
+.receipt {
+  width: 80mm;
+  margin: 20px auto 0;
+  padding: 10px;
+}
+
+@media print {
+  .receipt {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+}

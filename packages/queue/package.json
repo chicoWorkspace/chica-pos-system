@@ -1,0 +1,24 @@
+{
+  "name": "@repo/queue",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "private": true,
+   "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/api-client": "workspace:*",
+    "@repo/redis": "workspace:*",
+    "bullmq": "^5.0.0",
+    "ioredis": "^5.8.2",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}

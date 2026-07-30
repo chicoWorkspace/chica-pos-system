@@ -1,0 +1,28 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "types": ["node", "jest"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
+
+
+// {
+//   "extends": "@repo/typescript-config/base.json",
+//   "compilerOptions": {
+//     "outDir": "./dist",
+//     "rootDir": "./src",
+//     "paths": {
+//       "@repo/database": ["../../packages/db/src/index.ts"],
+//       "@/*": ["./src/*"]
+//     }
+//   },
+//   "include": ["src/**/*.ts", "../../packages/db/src/index.ts"],
+//   "exclude": ["node_modules", "dist"]
+// }
