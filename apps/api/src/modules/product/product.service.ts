@@ -16,7 +16,7 @@ export class ProductService {
 
   private getCacheKey(filter: ProductGetParams): string {
     const filterString = JSON.stringify(filter);
-    return `${this.CACHE_KEY_PREFIX}}:${filterString}`;
+    return `${this.CACHE_KEY_PREFIX}:${filterString}`;
   }
 
   async invalidateCache(): Promise<void> {
@@ -29,6 +29,7 @@ export class ProductService {
 
   async create(payload: CreateProductRequest) {
     const { product, specInventories, photos } = payload;
+    await this.invalidateCache();
     return this.productFeature.createProduct(
       product,
       specInventories,
@@ -38,6 +39,7 @@ export class ProductService {
 
   async update(payload: UpdateProductRequest) {
     const { product, specInventories, photos } = payload;
+    await this.invalidateCache();
     return this.productFeature.UpdateProduct(
       product,
       specInventories,
