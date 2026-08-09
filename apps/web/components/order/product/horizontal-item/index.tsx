@@ -142,12 +142,6 @@ const HorizontalItem = memo(function (props: ItemProps) {
                     className={horizontalProductCardCls.actionIcon}
                   />
                 </button>
-                <button className={horizontalProductCardCls.actionButton}>
-                  <Edit3 className={horizontalProductCardCls.actionIcon} />
-                </button>
-                <button className={horizontalProductCardCls.actionButton}>
-                  <BarChart3 className={horizontalProductCardCls.actionIcon} />
-                </button>
               </div>
             </div>
 

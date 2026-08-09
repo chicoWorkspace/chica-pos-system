@@ -103,12 +103,6 @@ const VerticalItem = memo(function (props: ItemProps) {
             >
               <Eye className={defaultProductCardCls.imageActionIcon} />
             </button>
-            <button className={defaultProductCardCls.imageActionButton}>
-              <Edit3 className={defaultProductCardCls.imageActionIcon} />
-            </button>
-            <button className={defaultProductCardCls.imageActionButton}>
-              <BarChart3 className={defaultProductCardCls.imageActionIcon} />
-            </button>
           </div>
         </div>
         {/* Body */}

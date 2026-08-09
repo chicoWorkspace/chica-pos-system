@@ -429,7 +429,7 @@ export const whiteTheme = {
 
       paymentGrid: "mt-4 grid grid-cols-3 gap-2",
       paymentBtnActive:
-        "inline-flex items-center justify-center gap-1 rounded-xl bg-[#1A1917] border border-[#1A1917] px-2 py-2 text-xs font-medium text-white shadow-sm transition-all active:scale-95",
+        "inline-flex items-center justify-center gap-1 rounded-xl bg-[#1A1917]/60 border  px-2 py-2 text-xs font-medium text-white shadow-sm transition-all active:scale-95",
       paymentBtnNormal:
         "inline-flex items-center justify-center gap-1 rounded-xl bg-white border border-black/[0.06] px-2 py-2 text-xs font-medium text-[#6B6760] transition-colors hover:bg-[#F5F4F1] active:scale-95",
       paymentIcon: "h-3.5 w-3.5",
