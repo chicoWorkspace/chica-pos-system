@@ -1,8 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  PhotosProps,
-  SpecInventoriesProps,
-} from "@repo/api-client";
+import { PhotosProps, SpecInventoriesProps } from "@repo/api-client";
 import {
   addCartAsync,
   decreaseCartAsync,
@@ -11,6 +8,7 @@ import {
   addApiCartAsync,
   decreaseApiCartAsync,
   deleteApiCartAsync,
+  clearApiCartAsync,
 } from "./cartThunk";
 import { CartTableResult } from "@repo/api-client";
 
@@ -50,12 +48,12 @@ const cartSlice = createSlice({
     // 添加商品到購物車
     addCart(
       state: { products: CartItem[] },
-      action: PayloadAction<AddToCartPayload>
+      action: PayloadAction<AddToCartPayload>,
     ) {
       const { product, quantity = 1 } = action.payload;
 
       const existing = state.products.find(
-        (item) => item._id.toString() === product._id.toString()
+        (item) => item._id.toString() === product._id.toString(),
       );
 
       const maxAvailable = product.stock ?? Infinity;
@@ -73,14 +71,14 @@ const cartSlice = createSlice({
     // 減少商品數量
     decreaseCart(state, action: PayloadAction<string>) {
       const item = state.products.find(
-        (item) => item._id.toHexString() === action.payload
+        (item) => item._id.toHexString() === action.payload,
       );
       if (item) {
         if (item.quantity > 1) {
           item.quantity -= 1;
         } else {
           state.products = state.products.filter(
-            (i) => i._id.toString() !== action.payload
+            (i) => i._id.toString() !== action.payload,
           );
         }
       }
@@ -88,7 +86,7 @@ const cartSlice = createSlice({
     // 刪除購物車中的商品
     deletCart(state, action: PayloadAction<string>) {
       state.products = state.products.filter(
-        (item) => item._id.toString() !== action.payload
+        (item) => item._id.toString() !== action.payload,
       );
     },
     // 清空購物車
@@ -105,7 +103,7 @@ const cartSlice = createSlice({
         const { product, quantity } = action.payload;
 
         const existing = state.products.find(
-          (item) => item._id.toString() === product._id.toString()
+          (item) => item._id.toString() === product._id.toString(),
         );
 
         const maxAvailable = product.stock ?? Infinity;
@@ -123,14 +121,14 @@ const cartSlice = createSlice({
       // 減少商品數量
       .addCase(decreaseCartAsync.fulfilled, (state, action) => {
         const item = state.products.find(
-          (item) => item._id.toString() === action.payload
+          (item) => item._id.toString() === action.payload,
         );
         if (item) {
           if (item.quantity > 1) {
             item.quantity -= 1;
           } else {
             state.products = state.products.filter(
-              (i) => i._id.toString() !== action.payload
+              (i) => i._id.toString() !== action.payload,
             );
           }
         }
@@ -167,13 +165,19 @@ const cartSlice = createSlice({
         state.isUpdating = false;
       })
       //向api[刪除]購物車資料
-       .addCase(deleteApiCartAsync.pending, (state) => {
+      .addCase(deleteApiCartAsync.pending, (state) => {
         state.isUpdating = true;
       })
       .addCase(deleteApiCartAsync.fulfilled, (state, action) => {
         const items = action.payload.items;
         state.products = items;
         state.isUpdating = false;
+      })
+      .addCase(clearApiCartAsync.fulfilled, (state) => {
+        state.products = [];
+      })
+      .addCase(clearApiCartAsync.pending, (state) => {
+        state.isUpdating = true;
       });
 
     //     builder

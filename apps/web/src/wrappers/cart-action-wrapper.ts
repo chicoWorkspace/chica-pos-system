@@ -1,4 +1,11 @@
-import { deleteSpec, get, ICartAction, update ,order} from "../action/cart/action";
+import {
+  deleteSpec,
+  get,
+  ICartAction,
+  update,
+  order,
+  clear,
+} from "../action/cart/action";
 
 /**
  * 這是 Cart Actions 的組裝物件。
@@ -10,4 +17,5 @@ export const cartActionWrapper: ICartAction = {
   order,
   update,
   deleteSpec,
+  clear,
 };

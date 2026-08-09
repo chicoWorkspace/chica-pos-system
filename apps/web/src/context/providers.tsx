@@ -29,7 +29,7 @@ function AuthWatcher({ children }: { children: React.ReactNode }) {
 
     if (session?.error) {
       signOut({
-        callbackUrl: `/login?warning=${encodeURIComponent("登入已失效, 請重新登入")}`,
+        callbackUrl: `/login?type=warning&msg=${encodeURIComponent("登入已失效, 請重新登入")}`,
       });
     }
   }, [session, status]);

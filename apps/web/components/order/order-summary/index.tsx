@@ -9,13 +9,18 @@ import { RootState } from "@/src/store";
 import { CartItem } from "@/src/store/cart/cartSlice";
 import {
   addApiCartAsync,
+  clearApiCartAsync,
   decreaseApiCartAsync,
   deleteApiCartAsync,
   getCartAsync,
 } from "@/src/store/cart/cartThunk";
 import { closeSideMenu, toggleSideMenu } from "@/src/store/sideMenuSlice";
 import { cartActionWrapper } from "@/src/wrappers/cart-action-wrapper";
-import { CategoryResult, OrderCreaterResult } from "@repo/api-client";
+import {
+  CategoryResult,
+  OrderCreaterResult,
+  OrderEvent,
+} from "@repo/api-client";
 import { Clock as ClockTemplate } from "@repo/ui/src/clock";
 import { AnimatePresence, motion } from "framer-motion";
 import * as Icons from "lucide-react";
@@ -40,6 +45,7 @@ import { useSelector } from "react-redux";
 import { CashModal, CashOrderPayload } from "./cash-modal";
 import QrcodeModal from "./qrcode-modal";
 import ReceiptPreview from "./receipt";
+import { isMobile } from "react-device-detect";
 interface OrderSummaryProps {
   categories: CategoryResult;
 }
@@ -103,7 +109,20 @@ export default function OrderSummary(props: OrderSummaryProps) {
   useEffect(() => {
     if (!socket) return;
 
-    const handleOrderState = (event: any) => {
+    const handleOrderState = (event: OrderEvent) => {
+      switch (event.type) {
+        case "success":
+        case "linepay_url":
+          console.log("訂單成功或取得 linepay_url，清空購物車");
+          appDispatch(clearApiCartAsync())
+            .unwrap()
+            .then((item) => {})
+            .catch((err: any) => {
+              console.error("清空購物車失敗:", err);
+            });
+          break;
+      }
+
       switch (event.type) {
         case "success":
           orderCreater.current = event.payload;
@@ -112,6 +131,11 @@ export default function OrderSummary(props: OrderSummaryProps) {
           break;
 
         case "linepay_url":
+          if (isMobile) {
+            window.location.href = event.payload.app;
+            return;
+          }
+
           closeLoadingModal();
           openDialog({
             title: "電子錢包",

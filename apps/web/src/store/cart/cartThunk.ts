@@ -3,10 +3,7 @@ import { AddToCartPayload, CartState } from "./cartSlice";
 import { RootState } from "..";
 import { getCartApi } from "@/src/api-client/cart";
 import { cartActionWrapper } from "@/src/wrappers/cart-action-wrapper";
-import {
-  CartResult,
-  CartTableResult,
-} from "@repo/api-client";
+import { CartResult, CartTableResult } from "@repo/api-client";
 
 // export const fetchProducts = createAsyncThunk<Product[]>(
 //   "products/fetch",
@@ -34,7 +31,7 @@ export const addCartAsync = createAsyncThunk<
   const { product, quantity } = payload;
   const state = thunkAPI.getState();
   const existing = state.cart.products.find(
-    (item) => item._id.toString() === product._id.toString()
+    (item) => item._id.toString() === product._id.toString(),
   );
 
   const maxAvailable = product.stock ?? Infinity;
@@ -56,7 +53,7 @@ export const decreaseCartAsync = createAsyncThunk<
 >("cart/decreaseCart", async (product_uuid, thunkAPI) => {
   const state = thunkAPI.getState();
   const item = state.cart.products.find(
-    (item) => item._id.toString() === product_uuid
+    (item) => item._id.toString() === product_uuid,
   );
 
   if (!item) {
@@ -73,7 +70,7 @@ export const deleteCartAsync = createAsyncThunk<
 >("cart/deleteCart", async (productUuid, thunkAPI) => {
   const state = thunkAPI.getState();
   const item = state.cart.products.find(
-    (item) => item._id.toString() === productUuid
+    (item) => item._id.toString() === productUuid,
   );
 
   if (!item) {
@@ -97,7 +94,7 @@ export const getCartAsync = createAsyncThunk<
     return cart as CartTableResult;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(
-      err.response?.data || err.message || "Unknown error"
+      err.response?.data || err.message || "Unknown error",
     ) as ReturnType<typeof thunkAPI.rejectWithValue>; // 明確轉型，避免 undefined
   }
 });
@@ -111,7 +108,7 @@ export const addApiCartAsync = createAsyncThunk<
     const { product, quantity } = payload;
     const state = thunkAPI.getState();
     const existing = state.cart.products.find(
-      (item) => item._id.toString() === product._id.toString()
+      (item) => item._id.toString() === product._id.toString(),
     );
 
     const maxAvailable = product.stock ?? Infinity;
@@ -128,7 +125,7 @@ export const addApiCartAsync = createAsyncThunk<
     return cart as CartTableResult;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(
-      err.response?.data || err.message || "Unknown error"
+      err.response?.data || err.message || "Unknown error",
     ) as ReturnType<typeof thunkAPI.rejectWithValue>; // 明確轉型，避免 undefined
   }
 });
@@ -141,7 +138,7 @@ export const decreaseApiCartAsync = createAsyncThunk<
   try {
     const state = thunkAPI.getState();
     const item = state.cart.products.find(
-      (item) => item._id.toString() === specId
+      (item) => item._id.toString() === specId,
     );
 
     if (!item) {
@@ -156,7 +153,7 @@ export const decreaseApiCartAsync = createAsyncThunk<
     return cart as CartTableResult;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(
-      err.response?.data || err.message || "Unknown error"
+      err.response?.data || err.message || "Unknown error",
     ) as ReturnType<typeof thunkAPI.rejectWithValue>; // 明確轉型，避免 undefined
   }
 });
@@ -169,18 +166,33 @@ export const deleteApiCartAsync = createAsyncThunk<
   try {
     const state = thunkAPI.getState();
     const item = state.cart.products.find(
-      (item) => item._id.toString() === specId
+      (item) => item._id.toString() === specId,
     );
 
     if (!item) {
       return thunkAPI.rejectWithValue("商品不存在");
     }
-    
+
     const cart = await cartActionWrapper.deleteSpec(item._id.toString());
     return cart as CartTableResult;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(
-      err.response?.data || err.message || "Unknown error"
+      err.response?.data || err.message || "Unknown error",
+    ) as ReturnType<typeof thunkAPI.rejectWithValue>; // 明確轉型，避免 undefined
+  }
+});
+
+export const clearApiCartAsync = createAsyncThunk<
+  CartTableResult, // 回傳值（fulfilled 用）
+  void, // 傳入值
+  { state: RootState; rejectValue: string }
+>("cart/clearApiCartAsync", async (_, thunkAPI) => {
+  try {
+    const cart = await cartActionWrapper.clear();
+    return cart as CartTableResult;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue(
+      err.response?.data || err.message || "Unknown error",
     ) as ReturnType<typeof thunkAPI.rejectWithValue>; // 明確轉型，避免 undefined
   }
 });

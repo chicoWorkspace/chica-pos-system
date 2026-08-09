@@ -64,7 +64,10 @@ export function BaseContextProvider({ children }: { children: ReactNode }) {
       appDispatch(addAnnouncements(payload));
     };
 
-    socket.on("announcement:publish", handlePublish);
+    socket.on("announcement:publish", (payload)=>{
+      console.log("announcement:publish", payload);
+      handlePublish(payload);
+    });
 
     return () => {
       socket.off("announcement:publish", handlePublish);

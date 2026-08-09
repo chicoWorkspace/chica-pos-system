@@ -39,6 +39,7 @@ export default function LeftMenu(props: LeftMenuProps) {
   const appDispatch = useAppDispatch();
   const canOrderView = useSelector(selectCan("order", "view"));
   const canProdcutView = useSelector(selectCan("product", "view"));
+  const canAnalyticsView = useSelector(selectCan("analytics", "view"));
   const [isLoading, setIsLoading] = useState(false);
 
   const isOnline = useSetterAndValue<boolean>(true);
@@ -80,7 +81,7 @@ export default function LeftMenu(props: LeftMenuProps) {
       icon: NotebookText,
       label: "菜單",
     },
-    {
+    canAnalyticsView && {
       link: "/analytics",
       icon: BarChart3,
       label: "報表",

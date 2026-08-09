@@ -14,9 +14,10 @@ export interface ICartAction {
   order(params: CartOrderParams): Promise<null | undefined>;
   update(
     specId: string,
-    params: CartUpdateParams
+    params: CartUpdateParams,
   ): Promise<CartTableResult | undefined>;
   deleteSpec(specId: string): Promise<CartTableResult | undefined>;
+  clear(): Promise<CartTableResult | undefined>;
 }
 
 /**
@@ -30,7 +31,7 @@ export async function get() {
 }
 export async function order(params: CartOrderParams) {
   const { api, accessToken } = await setup();
-  return await api.order(accessToken,params);
+  return await api.order(accessToken, params);
 }
 export async function update(specId: string, params: CartUpdateParams) {
   const { api, accessToken } = await setup();
@@ -40,6 +41,11 @@ export async function update(specId: string, params: CartUpdateParams) {
 export async function deleteSpec(specId: string) {
   const { api, accessToken } = await setup();
   return await api.delete(accessToken, specId);
+}
+
+export async function clear() {
+  const { api, accessToken } = await setup();
+  return await api.clear(accessToken);
 }
 
 export async function setup() {

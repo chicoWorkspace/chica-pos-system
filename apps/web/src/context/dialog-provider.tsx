@@ -162,7 +162,7 @@ export function DialogContextProvider({ children }: { children: ReactNode }) {
             />
             <div>
               <p className="text-amber-300 font-medium mb-2">系統通知</p>
-              <div className="text-amber-200/80 text-sm leading-relaxed">
+              <div className="text-white text-sm leading-relaxed">
                 {resolvedContent}
               </div>
             </div>

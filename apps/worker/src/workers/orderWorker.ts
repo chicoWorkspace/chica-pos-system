@@ -7,7 +7,7 @@ import {
   RedisOrderFailedEvent,
   RedisOrderLinepayURLEvent,
 } from "@repo/api-client";
-import { Admin, Order } from "@repo/db";
+import { Admin, Cart, Order } from "@repo/db";
 import { createRedisInstance } from "@repo/redis";
 import { Job, Worker } from "bullmq";
 import { showJobs } from "../queues/orderQueue";
@@ -30,6 +30,7 @@ export async function startWorker() {
 
       const featureOrder = new Order();
       const featureAdmin = new Admin();
+      const featureCart = new Cart();
       try {
         const admin = await featureAdmin.getAdminByUserId(userId);
         if (!admin) {

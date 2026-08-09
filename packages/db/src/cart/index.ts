@@ -180,6 +180,12 @@ export class Cart {
     return newCart;
   }
 
+  public async cartClear(userId: string): Promise<ModelCart> {
+    const objUserId = new mongoose.Types.ObjectId(userId);
+    const newCart = await ModelCart.update({ userId: objUserId }, { items: [] });
+    return newCart;
+  }
+
   /**
    * 刪除
    * @param {CartDeleteParams} filterParams - 用於篩選要刪除文檔的參數

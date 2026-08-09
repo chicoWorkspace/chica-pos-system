@@ -89,6 +89,10 @@ export class CartService {
     await this.cartFeature.cartUpdate(userId, specId, quantity);
   }
 
+  async cartClear(userId: string) {
+    await this.cartFeature.cartClear(userId);
+  }
+
   async getCart(userId: string) {
     return this.formatCart(userId);
   }

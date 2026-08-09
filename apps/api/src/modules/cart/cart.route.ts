@@ -11,6 +11,7 @@ import { orderQueue } from "@repo/queue";
 import { authMiddleware } from "../../auth/authMiddleware2";
 import { paymentMethods } from "@repo/db";
 import { GetEnvConfig } from "@/utils";
+import { CartTableResult } from "@repo/api-client";
 const config = GetEnvConfig();
 
 const cartService = new CartService();
@@ -55,7 +56,7 @@ export const cartRoutes: FastifyPluginAsync = async (fastify) => {
         userId,
         paymentMethod,
         items: cart.items,
-        tipRate:config.TIP_RATE,
+        tipRate: config.TIP_RATE,
       });
       fastify.io
         .to(`user_${userId}`)
@@ -153,6 +154,35 @@ export const cartRoutes: FastifyPluginAsync = async (fastify) => {
 
       const result = await cartService.getCart(userId);
       reply.send({ status: "success", data: result });
+    },
+  );
+
+  // 清空購物車
+  fastify.delete(
+    "/",
+    {
+      preHandler: authMiddleware,
+      schema: {
+        tags: ["Cart"],
+        summary: "清空購物車商品",
+        description: "將購物車商品全部移除。",
+      },
+    },
+    async (req, reply) => {
+      const userId = (req as any).user?.id;
+      if (!userId)
+        return reply
+          .status(400)
+          .send({ status: "error", error: "查無使用者資訊, 請重新登入" });
+
+      await cartService.reFreshCart(userId);
+      await cartService.cartClear(userId);
+      await cartService.invalidateCartCache(userId);
+
+      reply.send({
+        status: "success",
+        data: { userId: userId, items: [] } as CartTableResult,
+      });
     },
   );
 };

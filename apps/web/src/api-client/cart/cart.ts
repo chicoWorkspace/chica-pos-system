@@ -1,9 +1,7 @@
 import {
-  CartAddParams,
   CartOrderParams,
-  CartResult,
   CartTableResult,
-  CartUpdateParams,
+  CartUpdateParams
 } from "@repo/api-client";
 import Api from "../api";
 
@@ -48,6 +46,16 @@ export class ApiCart extends Api {
       props: {},
     });
 
+    return result;
+  }
+
+  public clear(token: string) {
+    const result = this.call<CartTableResult>({
+      method: "DELETE",
+      uri: `/cart`,
+      token,
+      props: {},
+    });
     return result;
   }
 }
