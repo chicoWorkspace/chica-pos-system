@@ -134,23 +134,29 @@ export class Order {
         throw new Error("找不到對應的管理員資料");
       }
 
-      return await ModelOrder.add({
-        orderNumber,
-        items: oderItems,
-        totalAmount: totalAmount,
-        discountAmount: 0,
-        finalAmount: totalAmount + tipAmount,
-        status: state,
-        payment: {
-          method: paymentMethod,
-          paidAt: paidAt,
+      const order = await ModelOrder.add(
+        {
+          orderNumber,
+          items: oderItems,
+          totalAmount: totalAmount,
+          discountAmount: 0,
+          finalAmount: totalAmount + tipAmount,
+          status: state,
+          payment: {
+            method: paymentMethod,
+            paidAt: paidAt,
+          },
+          staff: {
+            userId: admin._id,
+            username: admin.username,
+          },
         },
-        staff: {
-          userId: admin._id,
-          username: admin.username,
-        },
-      });
+        session,
+      );
+
       await session.commitTransaction();
+
+      return order;
     } catch (err: any) {
       await session.abortTransaction();
       console.error(`❌ 訂單失敗: `, err.message);

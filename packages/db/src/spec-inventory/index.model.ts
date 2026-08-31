@@ -202,7 +202,7 @@ export class ModelSpecInventory {
     const ops = updates.map((item) => ({
       updateOne: {
         filter: item.filter,
-        update: { $set: item.updateData },
+        update: item.updateData,
       },
     }));
 

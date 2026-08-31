@@ -13,11 +13,16 @@ import { Job, Worker } from "bullmq";
 import { showJobs } from "../queues/orderQueue";
 import { generateReadableOrderNumber } from "../utils/gen-order";
 
+function getWorkerConcurrency() {
+  const value = Number(process.env.ORDER_WORKER_CONCURRENCY ?? 2);
+  return Number.isInteger(value) && value > 0 ? value : 2;
+}
+
 export async function startWorker() {
-  // 1️⃣ 建立 Redis Publisher (改用 ioredis 確保環境變數處理與專案其他地方一致)
   const pubClient = createRedisInstance("BullMQ-Publisher");
 
   const workerRedisConnection = createRedisInstance("BullMQ-OrderWorker");
+  const concurrency = getWorkerConcurrency();
 
   const orderWorker = new Worker(
     "orderQueue",
@@ -162,10 +167,13 @@ export async function startWorker() {
     },
     {
       connection: workerRedisConnection as any,
+      concurrency,
       removeOnComplete: { count: 100 }, 
       removeOnFail: { count: 500 },   
     },
   );
+
+  console.log(`Order worker started with concurrency=${concurrency}`);
 
   orderWorker.on("completed", async (job) => {
     console.log(`Job ${job.id} 已完成`);

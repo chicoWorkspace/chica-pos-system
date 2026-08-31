@@ -10,6 +10,7 @@ import { ca } from "zod/v4/locales/index.cjs";
 import { AnnouncementService } from "../modules/announcement/announcement.service";
 import { OrderCreaterResult } from "@repo/api-client";
 import { createOrderAnnouncement } from "../modules/announcement/announcement.effect";
+import { ProductService } from "@/modules/product/product.service";
 
 type IOServer = Server<any, ServerToClientEvents>;
 // 根據 Redis 發佈的事件，分派到對應的 Socket.IO 頻道
@@ -17,10 +18,13 @@ export async function dispatchSocketEvent(
   io: IOServer,
   event: RedisSocketEvent,
 ) {
+  const productService = new ProductService();
+
   const socketEvent = mapRedisToOrderEvent(event);
 
   switch (event.type) {
     case "order:completed":
+      await productService.invalidateCache();
       io.to(rooms.user(event.userId)).emit("order:state", socketEvent);
 
       try {

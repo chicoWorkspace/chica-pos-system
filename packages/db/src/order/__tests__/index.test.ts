@@ -173,6 +173,7 @@ describe('Order - createOrder', () => {
             quantity: 5,
           },
         ],
+        tipRate: 0,
       });
 
       expect(result).toBeDefined();
