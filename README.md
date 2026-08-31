@@ -12,10 +12,10 @@
 
 ## Live Demo & API Documentation
 
-| 服務 | 連結 
+| 服務 | - 
 | :--- | :--- 
-| **🌐 Web App** | [直接前往 Live Demo](https://web-production-67648.up.railway.app/) 
-| **📚 API Docs** | [瀏覽 Swagger 文檔](https://api-production-d770.up.railway.app/docs)
+| **Web App** | [直接前往 Live Demo](https://web-production-6fe4a.up.railway.app/) 
+| **API Docs** | [瀏覽 Swagger 文檔](https://api-production-3ca7e.up.railway.app/docs)
 
 ## 📋 專案概述
 

@@ -110,11 +110,19 @@ export default function OrderComp(props: OrderCompProps) {
       >
         <div className={` sm:block `}>
           <div className="flex justify-center items-center mb-2">
-            <h1
-              className={`${cls.header.text} text-3xl font-bold cursor-default hidden xl:mr-20 2xl:mr-56 xl:block`}
+         
+            <div
+              className={`${cls.header.text} relative cursor-default hidden xl:mr-20 2xl:mr-56 xl:block`}
             >
-              {process.env.NEXT_PUBLIC_SITE_NAME} POS
-            </h1>
+              <span className="text-3xl font-bold ">
+                {process.env.NEXT_PUBLIC_SITE_NAME} POS
+              </span>
+
+              <span className="absolute ml-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold uppercase text-amber-600 dark:text-amber-400">
+                Beta
+              </span>
+            </div>
+
             {/* WebSocket 即時通知區 */}
             <div
               className={`flex-1 ${cls.header.bg} ${cls.header.text} rounded-2xl`}
@@ -178,7 +186,9 @@ export default function OrderComp(props: OrderCompProps) {
         </div>
         {/* 分類 Tab */}
         <div className={`mb-2`}>
-          <div className={`mb-2 ${cls.section.card} backdrop-blur-sm rounded-xl py-2`}>
+          <div
+            className={`mb-2 ${cls.section.card} backdrop-blur-sm rounded-xl py-2`}
+          >
             <div className="flex  overflow-x-auto md:grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-4  pb-3 xl:pb-0 scrollbar-none">
               {" "}
               {categories.map((tab) => {
