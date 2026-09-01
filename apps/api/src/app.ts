@@ -124,6 +124,11 @@ export async function buildServer() {
 
       // 記錄原始錯誤
       request.log.error(error);
+
+      if (isProd && statusCode >= 500) {
+        message = "伺服器內部錯誤";
+      }
+
       reply.status(statusCode).send({
         status: "error",
         error: message,

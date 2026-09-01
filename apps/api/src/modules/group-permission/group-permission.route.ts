@@ -14,6 +14,10 @@ import {
 import { GroupPermissionsService } from "./group-permission.service";
 import { authMiddleware } from "../../auth/authMiddleware2";
 
+function createHttpError(statusCode: number, message: string) {
+  return Object.assign(new Error(message), { statusCode });
+}
+
 export const groupPermissionsRoutes: FastifyPluginAsyncTypebox = async (
   fastify
 ) => {
@@ -83,7 +87,7 @@ export const groupPermissionsRoutes: FastifyPluginAsyncTypebox = async (
         body: TogglePermissionSchema,
       },
     },
-    async (req, reply) => {
+    async (req) => {
       try {
         const result = await service.toggle(req.body);
         return {
@@ -91,11 +95,8 @@ export const groupPermissionsRoutes: FastifyPluginAsyncTypebox = async (
           data: result.data,
           error: null,
         };
-      } catch (error: any) {
-        return reply.status(400).send({
-          status: "error",
-          error: error.message,
-        });
+      } catch {
+        throw createHttpError(400, "權限更新失敗");
       }
     }
   );

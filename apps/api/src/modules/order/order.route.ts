@@ -6,6 +6,10 @@ import { OrderService } from "./order.service";
 import { orderQuerySchema, OrderQuery } from "./order.schema";
 import { GetOrderRequest } from "@repo/api-client";
 
+function createHttpError(statusCode: number, message: string) {
+  return Object.assign(new Error(message), { statusCode });
+}
+
 export const orderRoutes: FastifyPluginAsyncTypebox = async (fastify) => {
   const service = new OrderService();
 
@@ -58,11 +62,8 @@ export const orderRoutes: FastifyPluginAsyncTypebox = async (fastify) => {
         const result = await service.updatePaymentStatus(orderId, status, { token });
 
         return reply.send({ status: "success", data: result });
-      } catch (error) {
-        return reply.code(400).send({
-          status: "error",
-          message: error instanceof Error ? error.message : "更新付款狀態失敗",
-        });
+      } catch {
+        throw createHttpError(400, "更新付款狀態失敗");
       }
     },
   );

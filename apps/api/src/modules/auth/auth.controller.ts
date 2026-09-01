@@ -3,6 +3,10 @@ import { AuthService } from "./auth.service";
 
 const authService = new AuthService();
 
+function createHttpError(statusCode: number, message: string) {
+  return Object.assign(new Error(message), { statusCode });
+}
+
 export async function loginController(
   req: FastifyRequest,
   reply: FastifyReply
@@ -10,8 +14,8 @@ export async function loginController(
   try {
     const result = await authService.login(req.body as any);
     reply.send({ status: "success", data: result, error: null });
-  } catch (err: any) {
-    reply.send({ status: "error", data: null, error: err.message });
+  } catch {
+    throw createHttpError(401, "帳號或密碼錯誤");
   }
 }
 
@@ -22,8 +26,8 @@ export async function refreshController(
   try {
     const result = await authService.refresh(req.body as any);
     reply.send({ status: "success", data: result, error: null });
-  } catch (err: any) {
-    reply.status(403).send({ status: "error", error: err.message });
+  } catch {
+    throw createHttpError(403, "登入狀態已失效，請重新登入");
   }
 }
 
@@ -31,10 +35,6 @@ export async function permissionsController(
   req: FastifyRequest,
   reply: FastifyReply
 ) {
-  try {
-    const result = await authService.getPermissions((req as any).user);
-    reply.send({ status: "success", data: result });
-  } catch (err: any) {
-    reply.status(500).send({ status: "error", error: err.message });
-  }
+  const result = await authService.getPermissions((req as any).user);
+  reply.send({ status: "success", data: result });
 }
